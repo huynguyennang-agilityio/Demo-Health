@@ -1,48 +1,27 @@
 import Foundation
 import WatchConnectivity
 
-class WorkoutViewModel: NSObject, ObservableObject {
-    private var mockSession = MockWorkoutSession()
-    private var timer: Timer?
-
-    @Published var heartRate: Int = 0
-    @Published var calories: Double = 0
-    @Published var distance: Double = 0
+@MainActor
+final class WorkoutViewModel: NSObject, ObservableObject, WCSessionDelegate {
+    @Published var latestData: WorkoutData?
 
     override init() {
         super.init()
-        IOSConnectivity.shared.delegate = self
-    }
-
-    func start() {
-        mockSession.startWorkout()
-        timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { _ in
-            if self.mockSession.isRunning {
-                self.heartRate = self.mockSession.simulatedHeartRate()
-                self.calories += self.mockSession.simulatedCalories()
-                self.distance += self.mockSession.simulatedDistance()
-
-                IOSConnectivity.shared.sendMessage(
-                    ["heartRate": self.heartRate,
-                     "calories": self.calories,
-                     "distance": self.distance]
-                )
-            }
+        if WCSession.isSupported() {
+            WCSession.default.delegate = self
+            WCSession.default.activate()
         }
     }
 
-    func stop() {
-        mockSession.stopWorkout()
-        timer?.invalidate()
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        guard let json = message["workout"] as? String,
+              let data = json.data(using: .utf8),
+              let workout = try? JSONDecoder().decode(WorkoutData.self, from: data)
+        else { return }
+        latestData = workout
     }
-}
 
-extension WorkoutViewModel: IOSConnectivityDelegate {
-    func didReceiveData(_ data: [String : Any]) {
-        if let hr = data["heartRate"] as? Int {
-            DispatchQueue.main.async {
-                self.heartRate = hr
-            }
-        }
-    }
+    func sessionDidBecomeInactive(_ session: WCSession) {}
+    func sessionDidDeactivate(_ session: WCSession) {}
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
 }

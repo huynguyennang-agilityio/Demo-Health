@@ -1,0 +1,30 @@
+//
+//  WatchConnectivityService.swift
+//  MockWorkoutApp
+//
+//  Created by nanghuy on 6/11/25.
+//
+
+import WatchConnectivity
+
+final class WatchConnectivityService: NSObject, WCSessionDelegate {
+    static let shared = WatchConnectivityService()
+
+    private override init() {
+        super.init()
+        if WCSession.isSupported() {
+            WCSession.default.delegate = self
+            WCSession.default.activate()
+        }
+    }
+
+    func sendWorkoutData(_ data: WorkoutData) {
+        guard WCSession.default.isReachable else { return }
+        if let encoded = try? JSONEncoder().encode(data),
+           let json = String(data: encoded, encoding: .utf8) {
+            WCSession.default.sendMessage(["workout": json], replyHandler: nil)
+        }
+    }
+
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+}
