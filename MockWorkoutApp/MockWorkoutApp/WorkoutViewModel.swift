@@ -1,27 +1,35 @@
+//
+//  WorkoutViewModel.swift
+//  MockWorkoutApp
+//
+//  Created by nanghuy on 6/11/25.
+//
+
 import Foundation
-import WatchConnectivity
+import Combine
 
 @MainActor
-final class WorkoutViewModel: NSObject, ObservableObject, WCSessionDelegate {
+final class WorkoutViewModel: ObservableObject {
+    private let connectivity = iOSConnectivityService.shared
     @Published var latestData: WorkoutData?
 
-    override init() {
-        super.init()
-        if WCSession.isSupported() {
-            WCSession.default.delegate = self
-            WCSession.default.activate()
+    init() {
+        observeWorkoutData()
+    }
+
+    private func observeWorkoutData() {
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            for await data in self.connectivity.$latestData.values {
+                await MainActor.run {
+                    self.latestData = data
+                }
+            }
         }
     }
 
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        guard let json = message["workout"] as? String,
-              let data = json.data(using: .utf8),
-              let workout = try? JSONDecoder().decode(WorkoutData.self, from: data)
-        else { return }
-        latestData = workout
+    func sendCommand(_ command: String) {
+        connectivity.sendCommand(command)
     }
-
-    func sessionDidBecomeInactive(_ session: WCSession) {}
-    func sessionDidDeactivate(_ session: WCSession) {}
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
 }
