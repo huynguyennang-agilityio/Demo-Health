@@ -5,11 +5,9 @@ import HealthKit
 final class HeartManager: ObservableObject {
     private let healthStore = HKHealthStore()
 
-    // HRV samples
     @Published var hrvSamples: [(date: Date, hrvMs: Double)] = []
-    // RHR samples
     @Published var rhrSamples: [(date: Date, bpm: Double)] = []
-
+    @Published var heartRateSamples: [(date: Date, bpm: Double)] = []
     @Published var errorMessage: String?
 
     // MARK: - Authorization
@@ -21,14 +19,15 @@ final class HeartManager: ObservableObject {
 
         guard
             let hrvType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
-            let rhrType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)
+            let rhrType = HKObjectType.quantityType(forIdentifier: .restingHeartRate),
+            let hrType = HKObjectType.quantityType(forIdentifier: .heartRate)
         else {
-            errorMessage = "HRV or RHR type unavailable."
+            errorMessage = "Some HealthKit type unavailable."
             return
         }
 
         do {
-            try await healthStore.requestAuthorization(toShare: [], read: [hrvType, rhrType])
+            try await healthStore.requestAuthorization(toShare: [], read: [hrvType, rhrType, hrType])
         } catch {
             errorMessage = "Authorization failed: \(error.localizedDescription)"
         }
@@ -40,7 +39,6 @@ final class HeartManager: ObservableObject {
         unit: HKUnit,
         for date: Date
     ) async throws -> [(date: Date, value: Double)] {
-
         guard let quantityType = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
             throw NSError(domain: "HealthKit", code: 1,
                           userInfo: [NSLocalizedDescriptionKey: "Type unavailable"])
@@ -80,7 +78,6 @@ final class HeartManager: ObservableObject {
                 unit: HKUnit.secondUnit(with: .milli),
                 for: date
             ).map { (date: $0.date, hrvMs: $0.value) }
-
         } catch {
             errorMessage = "Fetch HRV error: \(error.localizedDescription)"
         }
@@ -99,10 +96,24 @@ final class HeartManager: ObservableObject {
         }
     }
 
-    // MARK: - Fetch both HRV + RHR
+    // MARK: - Fetch Heart Rate
+    func fetchHeartRate(for date: Date) async {
+        do {
+            self.heartRateSamples = try await fetchQuantitySamples(
+                typeIdentifier: .heartRate,
+                unit: HKUnit.count().unitDivided(by: HKUnit.minute()),
+                for: date
+            ).map { (date: $0.date, bpm: $0.value) }
+        } catch {
+            errorMessage = "Fetch Heart Rate error: \(error.localizedDescription)"
+        }
+    }
+
+    // MARK: - Fetch all data
     func fetchHeartData(for date: Date) async {
         await fetchHRV(for: date)
         await fetchRHR(for: date)
+        await fetchHeartRate(for: date)
     }
 
     // MARK: - Static default date

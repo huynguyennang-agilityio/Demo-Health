@@ -5,6 +5,7 @@ import HealthKit
 final class HeartViewModel: ObservableObject {
     @Published var hrvSamples: [HeartSample] = []
     @Published var rhrSamples: [HeartSample] = []
+    @Published var heartRateSamples: [HeartSample] = []
     @Published var errorMessage: String?
 
     private let manager = HeartManager()
@@ -26,6 +27,9 @@ final class HeartViewModel: ObservableObject {
         self.hrvSamples = manager.hrvSamples.map { HeartSample(date: $0.date, hrvMs: $0.hrvMs) }
         
         self.rhrSamples = manager.rhrSamples.map { HeartSample(date: $0.date, hrvMs: $0.bpm) }
+        
+        self.heartRateSamples = manager.heartRateSamples.map { HeartSample(date: $0.date, hrvMs: $0.bpm) }
+
 
     }
 

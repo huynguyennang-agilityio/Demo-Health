@@ -54,6 +54,17 @@ struct HeartDetailView: View {
                         }
                     }
                     .listStyle(.insetGrouped)
+                    
+                    Text("Heart rate")
+                    List(viewModel.heartRateSamples) { sample in
+                        HStack {
+                            Text(fullDateFormatter.string(from: sample.date))
+                                .font(.system(.body, design: .monospaced))
+                            Spacer()
+                            Text("\(String(format: "%.1f", sample.hrvMs)) ms")
+                        }
+                    }
+                    .listStyle(.insetGrouped)
 
                 }
             }
