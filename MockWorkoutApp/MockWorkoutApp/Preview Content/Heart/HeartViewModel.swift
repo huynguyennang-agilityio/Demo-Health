@@ -3,7 +3,8 @@ import HealthKit
 
 @MainActor
 final class HeartViewModel: ObservableObject {
-    @Published var samples: [HeartSample] = []
+    @Published var hrvSamples: [HeartSample] = []
+    @Published var rhrSamples: [HeartSample] = []
     @Published var errorMessage: String?
 
     private let manager = HeartManager()
@@ -15,17 +16,19 @@ final class HeartViewModel: ObservableObject {
     }
 
     // MARK: - Fetch HRV for a specific date
-    func fetchHRV(forFixedDate date: Date = HeartViewModel.defaultDate()) async {
-        samples.removeAll()
+    func fetchHearts(forFixedDate date: Date = HeartViewModel.defaultDate()) async {
+        hrvSamples.removeAll()
         errorMessage = nil
 
-        await manager.fetchHRV(for: date)
+        await manager.fetchHeartData(for: date)
         self.errorMessage = manager.errorMessage
 
-        self.samples = manager.samples.map { HeartSample(date: $0.date, hrvMs: $0.hrvMs) }
+        self.hrvSamples = manager.hrvSamples.map { HeartSample(date: $0.date, hrvMs: $0.hrvMs) }
+        
+        self.rhrSamples = manager.rhrSamples.map { HeartSample(date: $0.date, hrvMs: $0.bpm) }
+
     }
 
-    // Default date cũ
     nonisolated static func defaultDate() -> Date {
         var components = DateComponents()
         components.year = 2023

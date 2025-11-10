@@ -11,14 +11,12 @@ import Combine
 struct HeartDetailView: View {
     @StateObject private var viewModel = HeartViewModel()
 
-    // Formatter hiển thị ngày
     private let dayFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "dd-MM-yyyy"
         return df
     }()
 
-    // Formatter hiển thị ngày + giờ + phút + giây
     private let fullDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateFormat = "dd-MM-yyyy HH:mm:ss" // có thể thêm .SSS nếu muốn mili giây
@@ -30,26 +28,39 @@ struct HeartDetailView: View {
             VStack {
                 if let error = viewModel.errorMessage {
                     Text("⚠️ \(error)").foregroundColor(.red)
-                } else if viewModel.samples.isEmpty {
-                    Text("Loading HRV for \(dayFormatter.string(from: HeartViewModel.defaultDate())) ...")
+                } else if viewModel.hrvSamples.isEmpty && viewModel.rhrSamples.isEmpty {
+                    Text("Loading Hearts for \(dayFormatter.string(from: HeartViewModel.defaultDate())) ...")
                         .foregroundColor(.secondary)
                         .padding()
                 } else {
-                    List(viewModel.samples) { sample in
+                    Text("HRV Detail")
+                    List(viewModel.hrvSamples) { sample in
                         HStack {
                             Text(fullDateFormatter.string(from: sample.date))
-                                .font(.system(.body, design: .monospaced)) // hiển thị đều cột giờ
+                                .font(.system(.body, design: .monospaced))
                             Spacer()
                             Text("\(String(format: "%.1f", sample.hrvMs)) ms")
                         }
                     }
                     .listStyle(.insetGrouped)
+                    
+                    Text("RHR Detail")
+                    List(viewModel.rhrSamples) { sample in
+                        HStack {
+                            Text(fullDateFormatter.string(from: sample.date))
+                                .font(.system(.body, design: .monospaced))
+                            Spacer()
+                            Text("\(String(format: "%.1f", sample.hrvMs)) ms")
+                        }
+                    }
+                    .listStyle(.insetGrouped)
+
                 }
             }
-            .navigationTitle("HRV Details")
+            .navigationTitle("Heart Details")
             .task {
                 await viewModel.requestAuthorization()
-                await viewModel.fetchHRV(forFixedDate: HeartViewModel.defaultDate())
+                await viewModel.fetchHearts(forFixedDate: HeartViewModel.defaultDate())
             }
         }
     }

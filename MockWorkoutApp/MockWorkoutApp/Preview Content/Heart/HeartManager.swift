@@ -4,7 +4,12 @@ import HealthKit
 @MainActor
 final class HeartManager: ObservableObject {
     private let healthStore = HKHealthStore()
-    @Published var samples: [(date: Date, hrvMs: Double)] = []
+
+    // HRV samples
+    @Published var hrvSamples: [(date: Date, hrvMs: Double)] = []
+    // RHR samples
+    @Published var rhrSamples: [(date: Date, bpm: Double)] = []
+
     @Published var errorMessage: String?
 
     // MARK: - Authorization
@@ -13,64 +18,99 @@ final class HeartManager: ObservableObject {
             errorMessage = "Health data not available on this device."
             return
         }
-        guard let hrvType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
-            errorMessage = "HRV type unavailable."
+
+        guard
+            let hrvType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN),
+            let rhrType = HKObjectType.quantityType(forIdentifier: .restingHeartRate)
+        else {
+            errorMessage = "HRV or RHR type unavailable."
             return
         }
 
         do {
-            try await healthStore.requestAuthorization(toShare: [], read: [hrvType])
+            try await healthStore.requestAuthorization(toShare: [], read: [hrvType, rhrType])
         } catch {
             errorMessage = "Authorization failed: \(error.localizedDescription)"
         }
     }
 
-    // MARK: - Fetch HRV for a specific date
-    func fetchHRV(for date: Date) async {
-        samples.removeAll()
-        errorMessage = nil
+    // MARK: - Generic HealthKit fetch
+    private func fetchQuantitySamples(
+        typeIdentifier: HKQuantityTypeIdentifier,
+        unit: HKUnit,
+        for date: Date
+    ) async throws -> [(date: Date, value: Double)] {
 
-        guard let hrvType = HKObjectType.quantityType(forIdentifier: .heartRateVariabilitySDNN) else {
-            errorMessage = "HRV type unavailable."
-            return
+        guard let quantityType = HKObjectType.quantityType(forIdentifier: typeIdentifier) else {
+            throw NSError(domain: "HealthKit", code: 1,
+                          userInfo: [NSLocalizedDescriptionKey: "Type unavailable"])
         }
 
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
-        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else { return }
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else { return [] }
 
         let predicate = HKQuery.predicateForSamples(withStart: startOfDay, end: endOfDay, options: .strictStartDate)
 
-        do {
-            let results = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<[HKQuantitySample], Error>) in
-                let query = HKSampleQuery(
-                    sampleType: hrvType,
-                    predicate: predicate,
-                    limit: HKObjectQueryNoLimit,
-                    sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
-                ) { _, samples, error in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                        return
-                    }
-                    continuation.resume(returning: samples as? [HKQuantitySample] ?? [])
+        return try await withCheckedThrowingContinuation { continuation in
+            let query = HKSampleQuery(
+                sampleType: quantityType,
+                predicate: predicate,
+                limit: HKObjectQueryNoLimit,
+                sortDescriptors: [NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)]
+            ) { _, samples, error in
+                if let error = error {
+                    continuation.resume(throwing: error)
+                    return
                 }
-                healthStore.execute(query)
+                let result = (samples as? [HKQuantitySample])?.map {
+                    ($0.endDate, $0.quantity.doubleValue(for: unit))
+                } ?? []
+                continuation.resume(returning: result)
             }
+            healthStore.execute(query)
+        }
+    }
 
-            let unit = HKUnit.secondUnit(with: .milli)
-            self.samples = results.map { ($0.endDate, $0.quantity.doubleValue(for: unit)) }
-
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            for s in self.samples {
-                let dateString = formatter.string(from: s.date)
-                print("\(dateString): \(s.hrvMs) ms")
-            }
+    // MARK: - Fetch HRV
+    func fetchHRV(for date: Date) async {
+        do {
+            self.hrvSamples = try await fetchQuantitySamples(
+                typeIdentifier: .heartRateVariabilitySDNN,
+                unit: HKUnit.secondUnit(with: .milli),
+                for: date
+            ).map { (date: $0.date, hrvMs: $0.value) }
 
         } catch {
-            self.errorMessage = "Fetch error: \(error.localizedDescription)"
-            print(self.errorMessage!)
+            errorMessage = "Fetch HRV error: \(error.localizedDescription)"
         }
+    }
+
+    // MARK: - Fetch RHR
+    func fetchRHR(for date: Date) async {
+        do {
+            self.rhrSamples = try await fetchQuantitySamples(
+                typeIdentifier: .restingHeartRate,
+                unit: HKUnit.count().unitDivided(by: HKUnit.minute()),
+                for: date
+            ).map { (date: $0.date, bpm: $0.value) }
+        } catch {
+            errorMessage = "Fetch RHR error: \(error.localizedDescription)"
+        }
+    }
+
+    // MARK: - Fetch both HRV + RHR
+    func fetchHeartData(for date: Date) async {
+        await fetchHRV(for: date)
+        await fetchRHR(for: date)
+    }
+
+    // MARK: - Static default date
+    nonisolated static func defaultDate() -> Date {
+        var components = DateComponents()
+        components.year = 2024
+        components.month = 10
+        components.day = 22
+        return Calendar.current.date(from: components)!
     }
 }
