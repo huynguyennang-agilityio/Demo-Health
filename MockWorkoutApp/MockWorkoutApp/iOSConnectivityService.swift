@@ -22,27 +22,29 @@ final class iOSConnectivityService: NSObject, WCSessionDelegate {
     }
 
     func sendCommand(_ command: String) {
+        let session = WCSession.default
+
         guard WCSession.isSupported() else {
             print("⚠️ WatchConnectivity not supported on this device.")
             return
         }
         
-        guard WCSession.default.isPaired else {
+        guard session.isPaired else {
             print("⚠️ No Apple Watch paired with this iPhone.")
             return
         }
         
-        guard WCSession.default.isWatchAppInstalled else {
+        guard session.isWatchAppInstalled else {
             print("⚠️ The Watch app is not installed.")
             return
         }
         
-        guard WCSession.default.isReachable else {
-            print("⚠️ Apple Watch is not currently reachable (may be locked or out of range).")
-            return
-        }
-
-        WCSession.default.sendMessage(["command": command], replyHandler: nil)
+            if session.isReachable {
+                session.sendMessage(["command": command], replyHandler: nil)
+            } else {
+                print("⚠️ Apple Watch is not currently reachable (may be locked or out of range).")
+                session.transferUserInfo(["command": command])
+            }
     }
 
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {

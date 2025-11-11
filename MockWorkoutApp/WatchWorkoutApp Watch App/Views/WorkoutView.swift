@@ -12,8 +12,8 @@ struct WorkoutView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("🏃 Running")
-                .font(.title2).bold()
+            Text("🏃 Run")
+                .font(.title3).bold()
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("❤️ Heart rate: \(Int(viewModel.heartRate)) bpm")
