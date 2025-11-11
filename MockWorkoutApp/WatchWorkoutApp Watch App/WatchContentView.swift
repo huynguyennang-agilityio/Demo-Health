@@ -5,7 +5,7 @@ struct WatchContentView: View {
 
     var body: some View {
         VStack(spacing: 10) {
-            Text("⌚️ Watch App").font(.title3)
+            Text("⌚️ Watch App test").font(.title3)
             Text("Heart Rate: \(viewModel.heartRate) bpm")
 
             HStack {

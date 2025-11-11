@@ -420,6 +420,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchWorkoutApp;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The application uses your health data to suggest workout";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = huynang.Demo;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
@@ -455,6 +456,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = WatchWorkoutApp;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The application uses your health data to suggest workout";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = huynang.Demo;
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
