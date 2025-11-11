@@ -5,7 +5,6 @@
 //  Created by nanghuy on 7/11/25.
 //
 
-// iOSApp/Services/iOSConnectivityService.swift
 import Foundation
 import WatchConnectivity
 
@@ -23,7 +22,26 @@ final class iOSConnectivityService: NSObject, WCSessionDelegate {
     }
 
     func sendCommand(_ command: String) {
-        guard WCSession.default.isReachable else { return }
+        guard WCSession.isSupported() else {
+            print("⚠️ WatchConnectivity not supported on this device.")
+            return
+        }
+        
+        guard WCSession.default.isPaired else {
+            print("⚠️ No Apple Watch paired with this iPhone.")
+            return
+        }
+        
+        guard WCSession.default.isWatchAppInstalled else {
+            print("⚠️ The Watch app is not installed.")
+            return
+        }
+        
+        guard WCSession.default.isReachable else {
+            print("⚠️ Apple Watch is not currently reachable (may be locked or out of range).")
+            return
+        }
+
         WCSession.default.sendMessage(["command": command], replyHandler: nil)
     }
 

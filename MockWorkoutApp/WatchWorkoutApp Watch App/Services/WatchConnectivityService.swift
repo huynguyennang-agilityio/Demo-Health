@@ -5,7 +5,6 @@
 //  Created by nanghuy on 6/11/25.
 //
 
-// WatchApp/Services/WatchConnectivityService.swift
 import WatchConnectivity
 
 final class WatchConnectivityService: NSObject, WCSessionDelegate {

@@ -33,7 +33,7 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
     func startWorkout() {
         let config = HKWorkoutConfiguration()
         config.activityType = .running
-        config.locationType = .outdoor
+        config.locationType = .indoor
 
         do {
             session = try HKWorkoutSession(healthStore: healthStore, configuration: config)
