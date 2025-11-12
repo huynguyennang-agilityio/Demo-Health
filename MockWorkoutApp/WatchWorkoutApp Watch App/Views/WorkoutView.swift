@@ -18,10 +18,6 @@ struct WorkoutView: View {
                 Text("📏 Distance: \(vm.distance, specifier: "%.1f") m")
                 Text("🔥 Calories: \(vm.calories, specifier: "%.0f") kcal")
                 
-                HStack {
-                    Button("Pause") { vm.pauseWorkout() }
-                    Button("End") { vm.endWorkout() }
-                }
             } else {
                 Text("Waiting for iPhone...")
             }

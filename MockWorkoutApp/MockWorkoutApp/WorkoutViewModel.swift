@@ -10,10 +10,6 @@ import Combine
 import Share
 
 @MainActor
-import Foundation
-import Combine
-
-@MainActor
 final class WorkoutViewModel: ObservableObject {
     @Published var heartRate: Double = 0
     @Published var distance: Double = 0
@@ -25,6 +21,7 @@ final class WorkoutViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        print("Config.shared.baseURL: \(Config.shared.baseURL)")
         connectivity.$latestData
             .compactMap { $0 }
             .sink { [weak self] data in

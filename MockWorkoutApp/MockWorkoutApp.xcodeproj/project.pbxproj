@@ -11,7 +11,6 @@
 		64BC9EF02EC3862800F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EEF2EC3862800F43313 /* Share */; };
 		64BC9EF22EC3863100F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EF12EC3863100F43313 /* Share */; };
 		64ED7D192EC449DF009CFF88 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
-		64ED7D1A2EC449DF009CFF88 /* ActivityKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,17 +35,6 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		64ED7D1B2EC449DF009CFF88 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				64ED7D1A2EC449DF009CFF88 /* ActivityKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -56,9 +44,22 @@
 		64ED7D172EC44932009CFF88 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		64ED80E42EC4A7E3009CFF88 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 00ED11E02E7AB1FA00E5BF65 /* MockWorkoutApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		00ED11E32E7AB1FA00E5BF65 /* MockWorkoutApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				64ED80E42EC4A7E3009CFF88 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp" target */,
+			);
 			path = MockWorkoutApp;
 			sourceTree = "<group>";
 		};
@@ -129,7 +130,6 @@
 				00ED11DE2E7AB1FA00E5BF65 /* Frameworks */,
 				00ED11DF2E7AB1FA00E5BF65 /* Resources */,
 				00ED12072E7AB21500E5BF65 /* Embed Watch Content */,
-				64ED7D1B2EC449DF009CFF88 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -383,6 +383,7 @@
 				DEVELOPMENT_TEAM = KHAR8S7L52;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MockWorkoutApp/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app requires access to your health data to track and improve your workouts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -422,6 +423,7 @@
 				DEVELOPMENT_TEAM = KHAR8S7L52;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MockWorkoutApp/Info.plist;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app requires access to your health data to track and improve your workouts.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
