@@ -17,110 +17,127 @@ import Combine
 import SwiftUI
 import HealthKit
 import WatchConnectivity
+import Share
 
 @MainActor
-final class WorkoutViewModel: ObservableObject {
+final class WatchWorkoutViewModel: ObservableObject {
+    @Published var heartRate: Double = 0
+    @Published var distance: Double = 0
+    @Published var calories: Double = 0
+    @Published var pace: Double = 0
+    @Published var isRunning: Bool = false
     
-    private let healthKitService = HealthKitService()
-    private let connectivity = WatchConnectivityService.shared
-    private let targetDistance: Double = 5_000
-    
-    // MARK: - Published properties for UI binding
-    @Published var heartRate = 0.0
-    @Published var distance = 0.0
-    @Published var calories = 0.0
-    @Published var pace = 0.0
-    @Published var isRunning = false
-    @Published var isPaused = false
-    
+    private let healthStore = HKHealthStore()
+    private var workoutSession: HKWorkoutSession?
+    private var builder: HKLiveWorkoutBuilder?
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
-        // Request HealthKit authorization
-        Task { await healthKitService.requestAuthorization() }
-        
-        // Observe HealthKit updates
-        startObserving()
-        
-        // Listen to commands from WatchConnectivityService via NotificationCenter
-        startListeningCommands()
-        
-        // Optional: direct closure callback
-        connectivity.onCommandReceived = { [weak self] cmd in
-            self?.handleCommand(cmd)
-        }
-    }
+    private let connectivity = WatchConnectivityService.shared
+//    private var liveActivity: Activity<WorkoutAttributes>?
     
-    // MARK: - Observe HealthKit data continuously
-    private func startObserving() {
-        Task.detached { [weak self] in
+    init() {
+        connectivity.onCommandReceived = { [weak self] cmd in
             guard let self = self else { return }
-            
-            // Async stream of HealthKit objectWillChange
-            for await _ in self.healthKitService.objectWillChange.values() {
-                await MainActor.run {
-                    self.heartRate = self.healthKitService.heartRate
-                    self.distance = self.healthKitService.distance
-                    self.calories = self.healthKitService.calories
-                    self.pace = self.healthKitService.pace
-                    self.isRunning = self.healthKitService.isRunning
-                    self.isPaused = self.healthKitService.isPaused
-                    
-                    // Send workout data to iOS app
-                    let data = WorkoutData(
-                        heartRate: self.heartRate,
-                        distance: self.distance,
-                        calories: self.calories,
-                        pace: self.pace,
-                        timestamp: Date()
-                    )
-                    
-                    if WCSession.default.isReachable {
-                        // Realtime message
-                        if let json = try? JSONEncoder().encode(data),
-                           let jsonString = String(data: json, encoding: .utf8) {
-                            WCSession.default.sendMessage(["workout": jsonString], replyHandler: nil)
-                        }
-                    } else {
-                        // Send via transferUserInfo for background / killed iOS app
-                        WCSession.default.transferUserInfo(["workout": data])
-                    }
-                    
-                    // Automatically end workout if target distance is reached
-                    if self.distance >= self.targetDistance {
-                        self.healthKitService.end()
-                    }
-                }
+            switch cmd {
+            case "startWorkout": Task { await self.startWorkout() }
+            case "pauseWorkout": self.pauseWorkout()
+            case "resumeWorkout": self.resumeWorkout()
+            case "endWorkout": self.endWorkout()
+            default: break
             }
         }
     }
     
-    // MARK: - Listen to commands via NotificationCenter publisher
-    private func startListeningCommands() {
-        NotificationCenter.default.publisher(for: .didReceiveWorkoutCommand)
-            .compactMap { $0.object as? String }
-            .sink { [weak self] cmd in
-                self?.handleCommand(cmd)
+    func startWorkout() async {
+        let config = HKWorkoutConfiguration()
+        config.activityType = .running
+        config.locationType = .outdoor
+        
+        do {
+            try await healthStore.requestAuthorization(
+                toShare: [HKObjectType.workoutType()],
+                read: [
+                    HKQuantityType.quantityType(forIdentifier: .heartRate)!,
+                    HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!,
+                    HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!
+                ]
+            )
+            
+            workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: config)
+            builder = workoutSession?.associatedWorkoutBuilder()
+            workoutSession?.startActivity(with: .now)
+            isRunning = true
+            startLiveActivity()
+            subscribeBuilder()
+        } catch {
+            print("❌ Watch workout failed: \(error)")
+        }
+    }
+    
+    private func subscribeBuilder() {
+        guard let builder = builder else { return }
+        builder.dataSource = HKLiveWorkoutDataSource(healthStore: healthStore, workoutConfiguration: builder.workoutConfiguration)
+        builder.beginCollection(withStart: Date()) { success, error in
+            if let error = error { print("Builder collection error: \(error)") }
+        }
+        
+        builder.publisher(for: \.statistics)
+            .sink { stats in
+                if let hr = stats[HKQuantityType.quantityType(forIdentifier: .heartRate)!]?.mostRecentQuantity()?.doubleValue(for: .count().unitDivided(by: .minute())) {
+                    self.heartRate = hr
+                }
+                if let dist = stats[HKQuantityType.quantityType(forIdentifier: .distanceWalkingRunning)!]?.sumQuantity()?.doubleValue(for: .meter()) {
+                    self.distance = dist
+                }
+                if let kcal = stats[HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!]?.sumQuantity()?.doubleValue(for: .kilocalorie()) {
+                    self.calories = kcal
+                }
+                
+                let data = WorkoutData(heartRate: self.heartRate, distance: self.distance, calories: self.calories, pace: 0, timestamp: Date())
+                self.connectivity.latestData = data
+                if let json = try? JSONEncoder().encode(data),
+                   let jsonString = String(data: json, encoding: .utf8),
+                   WCSession.default.isReachable {
+                    WCSession.default.sendMessage(["workout": jsonString], replyHandler: nil)
+                }
+                
+                self.updateLiveActivity()
             }
             .store(in: &cancellables)
     }
     
-    /// Handles start/pause/resume/end commands
-    private func handleCommand(_ command: String) {
-        switch command {
-        case "start": startWorkout()
-        case "pause": pauseWorkout()
-        case "resume": resumeWorkout()
-        case "end": endWorkout()
-        default: break
+    func pauseWorkout() { workoutSession?.pause() }
+    func resumeWorkout() { workoutSession?.resume() }
+    func endWorkout() {
+        workoutSession?.end()
+        isRunning = false
+        endLiveActivity()
+    }
+    
+    // MARK: Live Activity
+    func startLiveActivity() {
+        guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
+        let initialState = WorkoutAttributes.ContentState(heartRate: heartRate, distance: distance, calories: calories, pace: pace)
+        do {
+            liveActivity = try Activity<WorkoutAttributes>.request(
+                attributes: WorkoutAttributes(),
+                contentState: initialState,
+                pushType: nil
+            )
+        } catch {
+            print("Live Activity start failed: \(error)")
         }
     }
     
-    // MARK: - Workout actions
-    func startWorkout() { healthKitService.startWorkout() }
-    func pauseWorkout() { healthKitService.pause() }
-    func resumeWorkout() { healthKitService.resume() }
-    func endWorkout() { healthKitService.end() }
+    func updateLiveActivity() {
+        guard let liveActivity = liveActivity else { return }
+        let state = WorkoutAttributes.ContentState(heartRate: heartRate, distance: distance, calories: calories, pace: pace)
+        Task { await liveActivity.update(using: state) }
+    }
+    
+    func endLiveActivity() {
+        Task { await liveActivity?.end(dismissalPolicy: .immediate) }
+    }
 }
 
 extension Publisher {

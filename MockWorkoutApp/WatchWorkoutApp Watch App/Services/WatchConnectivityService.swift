@@ -7,6 +7,7 @@
 
 import Foundation
 import WatchConnectivity
+import Share
 
 /// A singleton service to handle communication between Watch and iOS
 final class WatchConnectivityService: NSObject, WCSessionDelegate {

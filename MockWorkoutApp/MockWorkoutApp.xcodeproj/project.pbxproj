@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		00ED12032E7AB21500E5BF65 /* WatchWorkoutApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		64BC9EF02EC3862800F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EEF2EC3862800F43313 /* Share */; };
+		64BC9EF22EC3863100F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EF12EC3863100F43313 /* Share */; };
+		64ED7D192EC449DF009CFF88 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
+		64ED7D1A2EC449DF009CFF88 /* ActivityKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,11 +36,24 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		64ED7D1B2EC449DF009CFF88 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				64ED7D1A2EC449DF009CFF88 /* ActivityKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00ED11E12E7AB1FA00E5BF65 /* MockWorkoutApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MockWorkoutApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchWorkoutApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64BC9EED2EC385F800F43313 /* Share */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Share; sourceTree = "<group>"; };
+		64ED7D172EC44932009CFF88 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -57,6 +74,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64ED7D192EC449DF009CFF88 /* ActivityKit.framework in Frameworks */,
+				64BC9EF22EC3863100F43313 /* Share in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64BC9EF02EC3862800F43313 /* Share in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,8 +93,10 @@
 		00ED11D82E7AB1FA00E5BF65 = {
 			isa = PBXGroup;
 			children = (
+				64BC9EED2EC385F800F43313 /* Share */,
 				00ED11E32E7AB1FA00E5BF65 /* MockWorkoutApp */,
 				00ED11F72E7AB21300E5BF65 /* WatchWorkoutApp Watch App */,
+				64BC9EEE2EC3862800F43313 /* Frameworks */,
 				00ED11E22E7AB1FA00E5BF65 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +110,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		64BC9EEE2EC3862800F43313 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				64ED7D172EC44932009CFF88 /* ActivityKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,6 +129,7 @@
 				00ED11DE2E7AB1FA00E5BF65 /* Frameworks */,
 				00ED11DF2E7AB1FA00E5BF65 /* Resources */,
 				00ED12072E7AB21500E5BF65 /* Embed Watch Content */,
+				64ED7D1B2EC449DF009CFF88 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -110,6 +141,7 @@
 			);
 			name = MockWorkoutApp;
 			packageProductDependencies = (
+				64BC9EF12EC3863100F43313 /* Share */,
 			);
 			productName = MockWorkoutApp;
 			productReference = 00ED11E12E7AB1FA00E5BF65 /* MockWorkoutApp.app */;
@@ -132,6 +164,7 @@
 			);
 			name = "WatchWorkoutApp Watch App";
 			packageProductDependencies = (
+				64BC9EEF2EC3862800F43313 /* Share */,
 			);
 			productName = "WatchWorkoutApp Watch App";
 			productReference = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */;
@@ -518,6 +551,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		64BC9EEF2EC3862800F43313 /* Share */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Share;
+		};
+		64BC9EF12EC3863100F43313 /* Share */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Share;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00ED11D92E7AB1FA00E5BF65 /* Project object */;
 }
