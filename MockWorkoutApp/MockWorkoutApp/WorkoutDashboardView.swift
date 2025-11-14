@@ -17,7 +17,8 @@ struct WorkoutDashboardView: View {
             Text("❤️ HR: \(vm.heartRate, specifier: "%.0f") bpm")
             Text("📏 Distance: \(vm.distance, specifier: "%.1f") m")
             Text("🔥 Calories: \(vm.calories, specifier: "%.0f") kcal")
-            
+            Text("⚡ Pace: \(vm.pace, specifier: "%.2f") m/s")
+
             HStack {
                 Button("Start") { vm.startWorkout() }
                 Button("Pause") { vm.pauseWorkout() }

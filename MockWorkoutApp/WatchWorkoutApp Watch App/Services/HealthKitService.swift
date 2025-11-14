@@ -64,8 +64,13 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
 
     func end() {
         session?.end()
-        builder?.endCollection(withEnd: Date()) { _, _ in
-            self.builder?.finishWorkout { _, _ in }
+        builder?.endCollection(withEnd: Date()) { end, error in
+            
+            self.builder?.finishWorkout { workout, error in
+                let predicate = HKQuery.predicateForObjects(from: workout!)
+
+            }
+
         }
         isRunning = false
         isPaused = false
