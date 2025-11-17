@@ -9,6 +9,7 @@ struct ContentView: View {
         case heart = "Heart Detail"
         case running = "Running"
         case login = "Login"
+        case strength = "Strength Training"
 
         var id: String { rawValue }
     }
@@ -35,6 +36,8 @@ struct ContentView: View {
             RunningView()
         case .login:
             LoginForm()
+        case .strength:
+            StrengthTrainingView()
         }
     }
 }
