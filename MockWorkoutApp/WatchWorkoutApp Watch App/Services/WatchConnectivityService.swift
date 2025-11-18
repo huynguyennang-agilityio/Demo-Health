@@ -9,55 +9,54 @@ import Foundation
 import WatchConnectivity
 import Share
 
-/// A singleton service to handle communication between Watch and iOS
-final class WatchConnectivityService: NSObject, WCSessionDelegate {
-    static let shared = WatchConnectivityService()
-    
-    /// Closure for ViewModel to receive commands directly
-    var onCommandReceived: ((String) -> Void)?
+final class WatchConnectivityServiceWatch: NSObject, ObservableObject {
+    static let shared = WatchConnectivityServiceWatch()
     
     private override init() {
         super.init()
-        if WCSession.isSupported() {
-            WCSession.default.delegate = self
-            WCSession.default.activate()
-        }
+        activateSession()
     }
     
-    /// Send workout data to the iOS app
-    func sendWorkoutData(_ data: WorkoutData) {
-        guard WCSession.default.isReachable else { return }
-        if let encoded = try? JSONEncoder().encode(data),
-           let json = String(data: encoded, encoding: .utf8) {
-            WCSession.default.sendMessage(["workout": json], replyHandler: nil)
-        }
+    private func activateSession() {
+        guard WCSession.isSupported() else { return }
+        let session = WCSession.default
+        session.delegate = self
+        session.activate()
     }
     
-    // MARK: - WCSessionDelegate
-    
-    /// Called when a realtime message is received from iOS
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if let command = message["command"] as? String {
-            // Trigger the closure for immediate handling
-            onCommandReceived?(command)
-            // Post notification so NotificationCenter publisher can receive it
-            NotificationCenter.default.post(name: .didReceiveWorkoutCommand, object: command)
+    /// Send arbitrary dictionary to phone. Uses sendMessage if reachable, fallback to transferUserInfo.
+    func send(_ dict: [String: Any]) {
+        let session = WCSession.default
+        if session.isReachable {
+            session.sendMessage(dict, replyHandler: nil) { error in
+                print("Watch send error: \(error.localizedDescription)")
+            }
+        } else {
+            session.transferUserInfo(dict)
         }
     }
-    
-    /// Called when a message is received via transferUserInfo (background / killed app)
-    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
-        if let command = userInfo["command"] as? String {
-            onCommandReceived?(command)
-            NotificationCenter.default.post(name: .didReceiveWorkoutCommand, object: command)
-        }
-    }
-    
-    // Required stubs for WCSessionDelegate
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
 }
 
-// Notification name for posting workout commands internally
+extension WatchConnectivityServiceWatch: WCSessionDelegate {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        print("Watch WCSession activated: \(activationState.rawValue)")
+    }
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        print("Watch reachability changed: \(session.isReachable)")
+    }
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        // handle incoming commands (start / pause / end)
+        DispatchQueue.main.async {
+            
+            if let cmd = message["command"] as? String {
+                NotificationCenter.default.post(name: .watchReceivedCommand, object: cmd)
+            } else if message["startWorkout"] as? Bool == true {
+                NotificationCenter.default.post(name: .watchReceivedCommand, object: "startWorkout")
+            }
+        }
+    }
+}
+
 extension Notification.Name {
-    static let didReceiveWorkoutCommand = Notification.Name("didReceiveWorkoutCommand")
+    static let watchReceivedCommand = Notification.Name("watchReceivedCommand")
 }

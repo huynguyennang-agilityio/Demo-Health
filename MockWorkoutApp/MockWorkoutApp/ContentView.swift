@@ -37,7 +37,81 @@ struct ContentView: View {
         case .login:
             LoginForm()
         case .strength:
-            StrengthTrainingView()
+            ContentSheet()
         }
+    }
+}
+
+struct ContentSheet: View {
+    @State private var showPicker = false
+    @State private var weight = 70
+    @State private var unit: WeightUnit = .kg
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Weight: \(weight) \(unit.rawValue)")
+                .font(.title2)
+
+            Button("Select Weight") {
+                showPicker = true
+            }
+        }
+        .sheet(isPresented: $showPicker) {
+            WeightPickerSheet(weight: $weight, unit: $unit)
+        }
+    }
+}
+
+enum WeightUnit: String, CaseIterable, Identifiable {
+    case kg = "kg"
+    case lbs = "lbs"
+
+    var id: String { rawValue }
+}
+
+
+struct WeightPickerSheet: View {
+    @Binding var weight: Int
+    @Binding var unit: WeightUnit
+    @Environment(\.dismiss) var dismiss
+
+    let weights = Array(20...300)
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Select Weight")
+                .font(.headline)
+
+            HStack(spacing: 20) {
+                // Weight Picker
+                Picker("Weight", selection: $weight) {
+                    ForEach(weights, id: \.self) { w in
+                        Text("\(w)")
+                            .tag(w)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: .infinity)
+
+                // Unit Picker (kg / lbs)
+                Picker("Unit", selection: $unit) {
+                    ForEach(WeightUnit.allCases) { unit in
+                        Text(unit.rawValue)
+                            .tag(unit)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: .infinity)
+            }
+            .frame(height: 200)
+
+            Button("Done") {
+                dismiss()
+            }
+            .font(.headline)
+            .padding(.top, 10)
+        }
+        .padding()
+        .presentationDetents([.medium, .large])
     }
 }

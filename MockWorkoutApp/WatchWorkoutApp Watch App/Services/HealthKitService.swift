@@ -8,7 +8,7 @@
 import Foundation
 import HealthKit
 
-final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelegate, HKLiveWorkoutBuilderDelegate {
+final class HealthKitService: NSObject, ObservableObject {
     private let healthStore = HKHealthStore()
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
@@ -53,12 +53,12 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
     }
 
     func pause() {
-        try? healthStore.pause(session!)
+        session?.pause()
         isPaused = true
     }
 
     func resume() {
-        try? healthStore.resumeWorkoutSession(session!)
+        session?.resume()
         isPaused = false
     }
 
@@ -67,7 +67,7 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
         builder?.endCollection(withEnd: Date()) { end, error in
             
             self.builder?.finishWorkout { workout, error in
-                let predicate = HKQuery.predicateForObjects(from: workout!)
+                _ = HKQuery.predicateForObjects(from: workout!)
 
             }
 
@@ -76,7 +76,15 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
         isPaused = false
     }
 
-    // MARK: - Delegate Updates
+   
+}
+
+extension HealthKitService:  HKLiveWorkoutBuilderDelegate {
+    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {}
+
+}
+// MARK: - Delegate Updates
+extension HealthKitService:  HKWorkoutSessionDelegate {
     func workoutBuilder(_ workoutBuilder: HKLiveWorkoutBuilder, didCollectDataOf types: Set<HKSampleType>) {
         for type in types {
             guard let quantityType = type as? HKQuantityType else { continue }
@@ -99,5 +107,4 @@ final class HealthKitService: NSObject, ObservableObject, HKWorkoutSessionDelega
 
     func workoutSession(_ workoutSession: HKWorkoutSession, didFailWithError error: Error) {}
     func workoutSession(_ workoutSession: HKWorkoutSession, didChangeTo toState: HKWorkoutSessionState, from fromState: HKWorkoutSessionState, date: Date) {}
-    func workoutBuilderDidCollectEvent(_ workoutBuilder: HKLiveWorkoutBuilder) {}
 }

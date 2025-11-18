@@ -7,22 +7,28 @@
 
 import SwiftUI
 
-struct WorkoutView: View {
+struct WatchWorkoutView: View {
     @StateObject private var vm = WatchWorkoutViewModel()
-    
+
     var body: some View {
-        VStack(spacing: 6) {
-            if vm.isRunning {
-                Text("🏃 Running...")
-                Text("❤️ HR: \(vm.heartRate, specifier: "%.0f") bpm")
-                Text("📏 Distance: \(vm.distance, specifier: "%.1f") m")
-                Text("🔥 Calories: \(vm.calories, specifier: "%.0f") kcal")
-                Text("⚡ Pace: \(vm.pace, specifier: "%.2f") m/s")
-                
-            } else {
-                Text("Waiting for iPhone...")
+        VStack(spacing: 8) {
+
+            Text(vm.workoutStarted ? "🏃 Running…" : "Open the app on iPhone to start")
+                .font(.headline)
+
+            if vm.workoutStarted {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("❤️ \(vm.heartRate, specifier: "%.0f") bpm")
+                    Text("🔥 \(vm.calories, specifier: "%.0f") kcal")
+                    Text("📏 \(vm.distance, specifier: "%.1f") m")
+                    Text("⚡ Pace: \(vm.pace, specifier: "%.2f") m/s")
+                }
+                .font(.system(size: 14))
             }
         }
         .padding()
+        .onAppear {
+            vm.notifyPhoneReady()
+        }
     }
 }
