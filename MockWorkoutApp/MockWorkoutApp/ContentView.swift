@@ -10,6 +10,7 @@ struct ContentView: View {
         case running = "Running"
         case login = "Login"
         case strength = "Strength Training"
+        case event = "Events"
 
         var id: String { rawValue }
     }
@@ -37,7 +38,9 @@ struct ContentView: View {
         case .login:
             LoginForm()
         case .strength:
-            ContentSheet()
+            StrengthTrainingView()
+        case .event:
+            CalendarEventsView()
         }
     }
 }
@@ -51,11 +54,14 @@ struct ContentSheet: View {
         VStack(spacing: 20) {
             Text("Weight: \(weight) \(unit.rawValue)")
                 .font(.title2)
+                .foregroundStyle(.white)
 
             Button("Select Weight") {
                 showPicker = true
             }
         }
+        .background(Color.black)
+
         .sheet(isPresented: $showPicker) {
             WeightPickerSheet(weight: $weight, unit: $unit)
         }
