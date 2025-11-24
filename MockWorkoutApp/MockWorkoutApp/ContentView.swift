@@ -11,6 +11,7 @@ struct ContentView: View {
         case login = "Login"
         case strength = "Strength Training"
         case event = "Events"
+        case opt = "Opt"
 
         var id: String { rawValue }
     }
@@ -41,6 +42,8 @@ struct ContentView: View {
             StrengthTrainingView()
         case .event:
             CalendarEventsView()
+        case .opt:
+            OTPCountdownView()
         }
     }
 }
@@ -121,3 +124,5 @@ struct WeightPickerSheet: View {
         .presentationDetents([.medium, .large])
     }
 }
+
+
