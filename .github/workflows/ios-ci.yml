@@ -67,9 +67,9 @@ jobs:
       - name: Install provisioning profile (Watch App)
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROFILE_WATCH_BASE64" | base64 --decode > watchapp.mobileprovision
-          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" watchapp.mobileprovision | head -1)
-          cp watchapp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
+          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" watch.mobileprovision | head -1)
+          cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
         env:
           PROFILE_WATCH_BASE64: ${{ secrets.IOS_MOBILEPROVISION_WATCH_BASE64 }}
 
