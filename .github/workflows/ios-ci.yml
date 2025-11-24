@@ -14,18 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # -------------------------
-      # Ruby + Bundler
-      # -------------------------
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
           bundler-cache: true
           
-      # -------------------------
-      # Select Xcode Version
-      # -------------------------
       - name: Select Xcode Version
         uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -57,7 +51,7 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "$PROFILE_APP_BASE64" | base64 --decode > app.mobileprovision
           UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" app.mobileprovision | head -1)
-          cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
         env:
           PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
 
@@ -69,24 +63,27 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
           UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" watch.mobileprovision | head -1)
-          cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
         env:
           PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
 
-      
       # -------------------------
       # DEBUG: List provisioning profiles
       # -------------------------
       - name: Inspect installed provisioning profiles
         run: |
+          echo "🔍 Listing provisioning profiles..."
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles
+
+          echo "🔍 Parsing profile info..."
           for f in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do
             echo "---- Profile: $f ----"
             security cms -D -i "$f" | /usr/libexec/PlistBuddy -c "Print :Name" /dev/stdin
-            echo "UUID:"
             security cms -D -i "$f" | /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin
             echo
           done
-            # -------------------------
+
+      # -------------------------
       # Install Firebase CLI
       # -------------------------
       - name: Install Firebase CLI
