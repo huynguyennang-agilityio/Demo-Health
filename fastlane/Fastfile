@@ -20,7 +20,8 @@ platform :ios do
           "huynang.Demo.watchkitapp" => "Watch app"
         }
       },
-      clean: true
+      clean: true,
+      disable_destination_validation: true
     )
 
     firebase_app_distribution(
