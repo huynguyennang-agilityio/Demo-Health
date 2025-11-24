@@ -21,7 +21,7 @@ platform :ios do
         }
       },
       clean: true,
-      disable_destination_validation: true
+      destination: nil
     )
 
     firebase_app_distribution(
