@@ -16,7 +16,8 @@ platform :ios do
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
-          "huynang.Demo" => "Your Development Profile Name"
+          "huynang.Demo" => "demo ad hoc"
+          "huynang.Demo.watchkitapp" => "Watch app",
         }
       },
       clean: true

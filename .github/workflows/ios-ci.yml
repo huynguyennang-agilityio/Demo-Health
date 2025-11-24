@@ -14,12 +14,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # -------------------------
+      # Ruby + Bundler
+      # -------------------------
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
           bundler-cache: true
           
+      # -------------------------
+      # Select Xcode Version
+      # -------------------------
       - name: Select Xcode Version
         uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -28,9 +34,9 @@ jobs:
       - name: Install gems
         run: bundle install
 
-      # ---------------------
+      # -------------------------
       # Install certificate
-      # ---------------------
+      # -------------------------
       - name: Import certificate
         run: |
           echo "$IOS_P12_BASE64" | base64 --decode > ios_cert.p12
@@ -43,27 +49,39 @@ jobs:
           IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
           IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
 
-      # ---------------------
-      # Install provisioning profile
-      # ---------------------
-      - name: Install provisioning profile
+      # -------------------------
+      # Install App provisioning profile
+      # -------------------------
+      - name: Install provisioning profile (iOS App)
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$PROFILE_BASE64" | base64 --decode > profile.mobileprovision
-          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" profile.mobileprovision | head -1)
-          cp profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+          echo "$PROFILE_APP_BASE64" | base64 --decode > app.mobileprovision
+          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" app.mobileprovision | head -1)
+          cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
         env:
-          PROFILE_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
+          PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
 
-      # ---------------------
+      # -------------------------
+      # Install Watch provisioning profile
+      # -------------------------
+      - name: Install provisioning profile (Watch App)
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
+          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" watch.mobileprovision | head -1)
+          cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$UUID.mobileprovision
+        env:
+          PROFILE_WATCH_BASE64: ${{ secrets.IOS_MOBILEPROVISION_WATCH_BASE64 }}
+
+      # -------------------------
       # Install Firebase CLI
-      # ---------------------
+      # -------------------------
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
 
-      # ---------------------
-      # Run Fastlane lane
-      # ---------------------
+      # -------------------------
+      # Run Fastlane CI lane
+      # -------------------------
       - name: Run Fastlane CI lane
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
@@ -71,4 +89,4 @@ jobs:
           FIREBASE_TESTERS: ${{ secrets.FIREBASE_TESTERS }}
           CI: "true"
         run: |
-          bundle exec fastlane ci_dev  
+          bundle exec fastlane ci_dev
