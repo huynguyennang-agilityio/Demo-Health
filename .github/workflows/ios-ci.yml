@@ -73,6 +73,13 @@ jobs:
         env:
           PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
 
+      
+      # -------------------------
+      # DEBUG: List provisioning profiles
+      # -------------------------
+      - name: List provisioning profiles
+        run: ls -la ~/Library/MobileDevice/Provisioning\ Profiles
+
       # -------------------------
       # Install Firebase CLI
       # -------------------------
