@@ -10,7 +10,7 @@ platform :ios do
     UI.user_error!("This lane is CI-only") unless ENV['CI']
 
     build_app(
-      project: "MockWorkoutApp.xcodeproj",
+      project: "MockWorkoutApp/MockWorkoutApp.xcodeproj",
       scheme: "MockWorkoutApp",
       export_method: "development",
       export_options: {
