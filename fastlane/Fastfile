@@ -16,8 +16,8 @@ platform :ios do
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
-          "huynang.Demo" => "demo ad hoc"
-          "huynang.Demo.watchkitapp" => "Watch app",
+          "huynang.Demo" => "demo ad hoc",
+          "huynang.Demo.watchkitapp" => "Watch app"
         }
       },
       clean: true
