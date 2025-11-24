@@ -1,0 +1,32 @@
+default_platform(:ios)
+
+platform :ios do
+
+  # -----------------------
+  # Development / Firebase
+  # -----------------------
+  desc "CI: Build Development IPA and upload to Firebase App Distribution"
+  lane :ci_dev do
+    UI.user_error!("This lane is CI-only") unless ENV['CI']
+
+    build_app(
+      project: "MockWorkoutApp.xcodeproj",
+      scheme: "MockWorkoutApp",
+      export_method: "development",
+      export_options: {
+        signingStyle: "manual",
+        provisioningProfiles: {
+          "huynang.Demo" => "Your Development Profile Name"
+        }
+      },
+      clean: true
+    )
+
+    firebase_app_distribution(
+      app: ENV["FIREBASE_IOS_APP_ID"],
+      testers: ENV["FIREBASE_TESTERS"],
+      release_notes: "CI Development build via GitHub Actions"
+    )
+  end
+
+  # --
