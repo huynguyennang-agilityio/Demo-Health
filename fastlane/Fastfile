@@ -19,8 +19,7 @@ platform :ios do
           "huynang.Demo" => "demo ad hoc"
         }
       },
-      clean: true,
-      xcargs: "-skipUnavailableActions YES" 
+      clean: true
     )
 
     firebase_app_distribution(
