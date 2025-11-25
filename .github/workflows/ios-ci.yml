@@ -27,7 +27,7 @@ jobs:
 
       - name: Install gems
         run: bundle install
-
+            
       # -------------------------
       # Install certificate
       # -------------------------
@@ -119,6 +119,10 @@ jobs:
       # -------------------------
       - name: Install Firebase CLI
         run: curl -sL https://firebase.tools | bash
+      - name: Debug schemes
+        run: |
+          echo "Schemes in project:"
+          xcodebuild -list -project MockWorkoutApp/MockWorkoutApp.xcodeproj
 
       # -------------------------
       # Run Fastlane CI lane
