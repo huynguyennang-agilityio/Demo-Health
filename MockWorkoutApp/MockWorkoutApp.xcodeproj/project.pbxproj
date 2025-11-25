@@ -10,11 +10,20 @@
 		00ED12032E7AB21500E5BF65 /* WatchWorkoutApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		64BC9EF02EC3862800F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EEF2EC3862800F43313 /* Share */; };
 		64BC9EF22EC3863100F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EF12EC3863100F43313 /* Share */; };
+		64C470402ED58AB6004A8294 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
+		64C470412ED58AB6004A8294 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64C4703D2ED58AB6004A8294 /* Share */; };
 		64ED7D192EC449DF009CFF88 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		00ED12012E7AB21500E5BF65 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00ED11D92E7AB1FA00E5BF65 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00ED11F52E7AB21300E5BF65;
+			remoteInfo = "WatchWorkoutApp Watch App";
+		};
+		64C4703C2ED58AB6004A8294 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00ED11D92E7AB1FA00E5BF65 /* Project object */;
 			proxyType = 1;
@@ -35,16 +44,35 @@
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		64C470432ED58AB6004A8294 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00ED11E12E7AB1FA00E5BF65 /* MockWorkoutApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MockWorkoutApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WatchWorkoutApp Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64BC9EED2EC385F800F43313 /* Share */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Share; sourceTree = "<group>"; };
+		64C470482ED58AB6004A8294 /* MockWorkoutApp copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MockWorkoutApp copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64C470492ED58AB6004A8294 /* MockWorkoutApp copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MockWorkoutApp copy-Info.plist"; path = "/Users/nanghuy/Desktop/Projects/Works/Trainning/ios-training/MockWorkoutApp/MockWorkoutApp copy-Info.plist"; sourceTree = "<absolute>"; };
 		64ED7D172EC44932009CFF88 /* ActivityKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ActivityKit.framework; path = System/Library/Frameworks/ActivityKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		64C4704A2ED58AB6004A8294 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp copy" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 64C4703A2ED58AB6004A8294 /* MockWorkoutApp copy */;
+		};
 		64ED80E42EC4A7E3009CFF88 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -59,6 +87,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				64ED80E42EC4A7E3009CFF88 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp" target */,
+				64C4704A2ED58AB6004A8294 /* Exceptions for "MockWorkoutApp" folder in "MockWorkoutApp copy" target */,
 			);
 			path = MockWorkoutApp;
 			sourceTree = "<group>";
@@ -88,6 +117,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		64C4703F2ED58AB6004A8294 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64C470402ED58AB6004A8294 /* ActivityKit.framework in Frameworks */,
+				64C470412ED58AB6004A8294 /* Share in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -98,6 +136,7 @@
 				00ED11E32E7AB1FA00E5BF65 /* MockWorkoutApp */,
 				00ED11F72E7AB21300E5BF65 /* WatchWorkoutApp Watch App */,
 				64BC9EEE2EC3862800F43313 /* Frameworks */,
+				64C470492ED58AB6004A8294 /* MockWorkoutApp copy-Info.plist */,
 				00ED11E22E7AB1FA00E5BF65 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,6 +146,7 @@
 			children = (
 				00ED11E12E7AB1FA00E5BF65 /* MockWorkoutApp.app */,
 				00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */,
+				64C470482ED58AB6004A8294 /* MockWorkoutApp copy.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -170,6 +210,31 @@
 			productReference = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		64C4703A2ED58AB6004A8294 /* MockWorkoutApp copy */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 64C470452ED58AB6004A8294 /* Build configuration list for PBXNativeTarget "MockWorkoutApp copy" */;
+			buildPhases = (
+				64C4703E2ED58AB6004A8294 /* Sources */,
+				64C4703F2ED58AB6004A8294 /* Frameworks */,
+				64C470422ED58AB6004A8294 /* Resources */,
+				64C470432ED58AB6004A8294 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				64C4703B2ED58AB6004A8294 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				00ED11E32E7AB1FA00E5BF65 /* MockWorkoutApp */,
+			);
+			name = "MockWorkoutApp copy";
+			packageProductDependencies = (
+				64C4703D2ED58AB6004A8294 /* Share */,
+			);
+			productName = MockWorkoutApp;
+			productReference = 64C470482ED58AB6004A8294 /* MockWorkoutApp copy.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -204,6 +269,7 @@
 			targets = (
 				00ED11E02E7AB1FA00E5BF65 /* MockWorkoutApp */,
 				00ED11F52E7AB21300E5BF65 /* WatchWorkoutApp Watch App */,
+				64C4703A2ED58AB6004A8294 /* MockWorkoutApp copy */,
 			);
 		};
 /* End PBXProject section */
@@ -217,6 +283,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		00ED11F42E7AB21300E5BF65 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64C470422ED58AB6004A8294 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -240,6 +313,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		64C4703E2ED58AB6004A8294 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -247,6 +327,11 @@
 			isa = PBXTargetDependency;
 			target = 00ED11F52E7AB21300E5BF65 /* WatchWorkoutApp Watch App */;
 			targetProxy = 00ED12012E7AB21500E5BF65 /* PBXContainerItemProxy */;
+		};
+		64C4703B2ED58AB6004A8294 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00ED11F52E7AB21300E5BF65 /* WatchWorkoutApp Watch App */;
+			targetProxy = 64C4703C2ED58AB6004A8294 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -552,6 +637,102 @@
 			};
 			name = Release;
 		};
+		64C470462ED58AB6004A8294 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MockWorkoutApp/MockWorkoutApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MockWorkoutApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KHAR8S7L52;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MockWorkoutApp copy-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need this permission in order to set reminders for you";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need this permission in order to set reminders for you";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app requires access to your health data to track and improve your workouts.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Check runing or sretght workout";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = huynang.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "demo ad hoc";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		64C470472ED58AB6004A8294 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MockWorkoutApp/MockWorkoutApp.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MockWorkoutApp/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = KHAR8S7L52;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "MockWorkoutApp copy-Info.plist";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "We need this permission in order to set reminders for you";
+				INFOPLIST_KEY_NSCalendarsWriteOnlyAccessUsageDescription = "We need this permission in order to set reminders for you";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "The application uses your health data to suggest workout";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "This app requires access to your health data to track and improve your workouts.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Check runing or sretght workout";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = huynang.Demo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "demo ad hoc";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -582,6 +763,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		64C470452ED58AB6004A8294 /* Build configuration list for PBXNativeTarget "MockWorkoutApp copy" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64C470462ED58AB6004A8294 /* Debug */,
+				64C470472ED58AB6004A8294 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -590,6 +780,10 @@
 			productName = Share;
 		};
 		64BC9EF12EC3863100F43313 /* Share */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Share;
+		};
+		64C4703D2ED58AB6004A8294 /* Share */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Share;
 		};

@@ -11,17 +11,16 @@ platform :ios do
 
     build_app(
       project: "MockWorkoutApp/MockWorkoutApp.xcodeproj",
-      scheme: "MockWorkoutApp",
+      scheme: "MockWorkoutApp copy",
       export_method: "ad-hoc",
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
-          "huynang.Demo" => "demo ad hoc",
-          "huynang.Demo.watchkitapp" => "Watch app"
+          "huynang.Demo" => "demo ad hoc"
         }
       },
       clean: true,
-      destination: nil
+      xcargs: "-skipUnavailableActions YES" 
     )
 
     firebase_app_distribution(
