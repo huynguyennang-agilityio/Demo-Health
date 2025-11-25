@@ -123,6 +123,10 @@ jobs:
         run: |
           echo "Schemes in project:"
           xcodebuild -list -project MockWorkoutApp/MockWorkoutApp.xcodeproj
+          
+      - name: Verify code signing identities
+        run: |
+          security find-identity -v -p codesigning
 
       # -------------------------
       # Run Fastlane CI lane
