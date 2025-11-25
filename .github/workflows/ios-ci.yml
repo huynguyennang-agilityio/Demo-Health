@@ -56,13 +56,11 @@ jobs:
           echo "📌 First 20 bytes (hex):"
           xxd -l 20 app.mobileprovision
         
-          security cms -D -i app.mobileprovision > decoded.plist || echo "❌ Decode failed"
-          head -20 decoded.plist || echo "❌ Decoded plist empty"
-        
-          UUID=$(security cms -D -i app.mobileprovision | /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin)
-          echo "📌 iOS App Profile UUID = $UUID"
-        
+          security cms -D -i app.mobileprovision > decoded.plist
+          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" decoded.plist)
+          echo "📌 UUID = $UUID"
           cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
+              
         env:
           PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
         
