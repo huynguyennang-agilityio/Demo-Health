@@ -11,18 +11,12 @@
 		64BC9EF22EC3863100F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EF12EC3863100F43313 /* Share */; };
 		64C470402ED58AB6004A8294 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
 		64C470412ED58AB6004A8294 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64C4703D2ED58AB6004A8294 /* Share */; };
+		64C470682ED598D1004A8294 /* WatchWorkoutApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		64ED7D192EC449DF009CFF88 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		00ED12012E7AB21500E5BF65 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 00ED11D92E7AB1FA00E5BF65 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 00ED11F52E7AB21300E5BF65;
-			remoteInfo = "WatchWorkoutApp Watch App";
-		};
-		64C4703C2ED58AB6004A8294 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 00ED11D92E7AB1FA00E5BF65 /* Project object */;
 			proxyType = 1;
@@ -38,6 +32,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
+				64C470682ED598D1004A8294 /* WatchWorkoutApp Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -220,7 +215,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				64C4703B2ED58AB6004A8294 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				00ED11E32E7AB1FA00E5BF65 /* MockWorkoutApp */,
@@ -325,11 +319,6 @@
 			isa = PBXTargetDependency;
 			target = 00ED11F52E7AB21300E5BF65 /* WatchWorkoutApp Watch App */;
 			targetProxy = 00ED12012E7AB21500E5BF65 /* PBXContainerItemProxy */;
-		};
-		64C4703B2ED58AB6004A8294 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 00ED11F52E7AB21300E5BF65 /* WatchWorkoutApp Watch App */;
-			targetProxy = 64C4703C2ED58AB6004A8294 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
