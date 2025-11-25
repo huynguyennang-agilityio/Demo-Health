@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00ED12032E7AB21500E5BF65 /* WatchWorkoutApp Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 00ED11F62E7AB21300E5BF65 /* WatchWorkoutApp Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		64BC9EF02EC3862800F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EEF2EC3862800F43313 /* Share */; };
 		64BC9EF22EC3863100F43313 /* Share in Frameworks */ = {isa = PBXBuildFile; productRef = 64BC9EF12EC3863100F43313 /* Share */; };
 		64C470402ED58AB6004A8294 /* ActivityKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64ED7D172EC44932009CFF88 /* ActivityKit.framework */; };
@@ -39,7 +38,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				00ED12032E7AB21500E5BF65 /* WatchWorkoutApp Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,7 +11,7 @@ platform :ios do
 
     build_app(
       project: "MockWorkoutApp/MockWorkoutApp.xcodeproj",
-      scheme: "MockWorkoutApp copy",
+      scheme: "MockWorkoutApp",
       export_method: "ad-hoc",
       export_options: {
         signingStyle: "manual",
