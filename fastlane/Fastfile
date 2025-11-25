@@ -19,7 +19,7 @@ platform :ios do
       export_options: {
         signingStyle: "manual",
         provisioningProfiles: {
-          "huynang.Demo.dev" => "demo ad hoc dev"
+          "huynang.Demo.dev" => "demo dev adhoc"
         }
       },
       clean: true
