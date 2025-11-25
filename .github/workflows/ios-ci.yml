@@ -67,30 +67,30 @@ jobs:
       # -------------------------
       # Install Watch provisioning profile
       # -------------------------
-      - name: Install provisioning profile (Watch App)
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+      # - name: Install provisioning profile (Watch App)
+      #   run: |
+      #     mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
       
-          # Decode base64 → file
-          printf "%s" "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
+      #     # Decode base64 → file
+      #     printf "%s" "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
       
-          # Debug: kiểm tra file
-          echo "📄 File size:"
-          ls -lh watch.mobileprovision
-          echo "📂 File type:"
-          file watch.mobileprovision
-          echo "📌 First 20 bytes (hex):"
-          xxd -l 20 watch.mobileprovision
+      #     # Debug: kiểm tra file
+      #     echo "📄 File size:"
+      #     ls -lh watch.mobileprovision
+      #     echo "📂 File type:"
+      #     file watch.mobileprovision
+      #     echo "📌 First 20 bytes (hex):"
+      #     xxd -l 20 watch.mobileprovision
       
-          # Extract correct UUID from decoded plist
-          security cms -D -i watch.mobileprovision > watch_decoded.plist
-          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" watch_decoded.plist)
-          echo "📌 Watch App UUID = $UUID"
+      #     # Extract correct UUID from decoded plist
+      #     security cms -D -i watch.mobileprovision > watch_decoded.plist
+      #     UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" watch_decoded.plist)
+      #     echo "📌 Watch App UUID = $UUID"
       
-          # Save with correct UUID filename
-          cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
-        env:
-          PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
+      #     # Save with correct UUID filename
+      #     cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
+      #   env:
+      #     PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
             
       # -------------------------
       # Install Firebase CLI
