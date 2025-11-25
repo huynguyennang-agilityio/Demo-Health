@@ -62,7 +62,7 @@ jobs:
           cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
               
         env:
-          PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
+          PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_DEV_BASE64 }}
         
       # -------------------------
       # Install Watch provisioning profile
@@ -91,29 +91,7 @@ jobs:
           cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
         env:
           PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
-      
-      # -------------------------
-      # DEBUG: List provisioning profiles
-      # -------------------------
-      - name: Inspect installed provisioning profiles
-        run: |
-          echo "🔍 Listing provisioning profiles..."
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles
-      
-          echo "🔍 Parsing profile info..."
-          for f in ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision; do
-            echo "---- Profile: $f ----"
             
-            security cms -D -i "$f" > decoded.plist
-            
-            NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" decoded.plist)
-            UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" decoded.plist)
-            
-            echo "Name: $NAME"
-            echo "UUID: $UUID"
-            echo
-          done
-      
       # -------------------------
       # Install Firebase CLI
       # -------------------------
@@ -123,10 +101,6 @@ jobs:
         run: |
           echo "Schemes in project:"
           xcodebuild -list -project MockWorkoutApp/MockWorkoutApp.xcodeproj
-          
-      - name: Verify code signing identities
-        run: |
-          security find-identity -v -p codesigning
 
       # -------------------------
       # Run Fastlane CI lane
