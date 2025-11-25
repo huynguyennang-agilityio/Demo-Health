@@ -42,18 +42,6 @@ jobs:
         env:
           IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
           IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
-
-      - name: Debug secret length
-        run: |
-          if [ -z "$IOS_P12_BASE64" ]; then
-            echo "❌ Secret IOS_P12_BASE64 is EMPTY or not loaded."
-            exit 1
-          else
-            echo "✅ Secret IOS_P12_BASE64 loaded (masked). Length:"
-            echo "${#IOS_P12_BASE64}"
-          fi
-        env:
-          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
         
       # -------------------------
       # Install App provisioning profile
@@ -61,8 +49,13 @@ jobs:
       - name: Install provisioning profile (iOS App)
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+
           echo "$PROFILE_APP_BASE64" | base64 --decode > app.mobileprovision
-          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" app.mobileprovision | head -1)
+      
+          UUID=$(security cms -D -i app.mobileprovision | /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin)
+      
+          echo "📌 iOS App Profile UUID = $UUID"
+      
           cp app.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
         env:
           PROFILE_APP_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64S }}
@@ -73,10 +66,17 @@ jobs:
       - name: Install provisioning profile (Watch App)
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          # Decode base64 → file
           echo "$PROFILE_WATCH_BASE64" | base64 --decode > watch.mobileprovision
-          UUID=$(grep -a -Eo "([A-F0-9]{8}(-[A-F0-9]{4}){4}[A-F0-9]{12})" watch.mobileprovision | head -1)
+      
+          # Extract correct UUID from decoded plist
+          UUID=$(security cms -D -i watch.mobileprovision | /usr/libexec/PlistBuddy -c "Print :UUID" /dev/stdin)
+      
+          echo "Found UUID: $UUID"
+      
+          # Save with correct UUID filename
           cp watch.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/${UUID}.mobileprovision
-        env:
+              env:
           PROFILE_WATCH_BASE64: ${{ secrets.IOS_PROFILE_WATCHAPP_BASE64 }}
 
       # -------------------------
