@@ -1,44 +1,31 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "CI: Build Development IPA for target copy and upload to Firebase App Distribution"
+
+  desc "CI: Build Development IPA and upload to Firebase App Distribution"
   lane :ci_dev do
-    # Ensure this lane runs only on CI
     UI.user_error!("This lane is CI-only") unless ENV['CI']
 
-    # -----------------------
-    # Debug: list certificates & provisioning profiles
-    # -----------------------
-    sh "security find-identity -v -p codesigning"   # List installed code signing identities
-    sh "ls -la ~/Library/MobileDevice/Provisioning\\ Profiles"  # List installed provisioning profiles
-
-    # -----------------------
-    # Build the app
-    # -----------------------
-    build_app(
-      project: "MockWorkoutApp/MockWorkoutApp.xcodeproj",
-      scheme: "MockWorkoutApp copy",
-      configuration: "Release",  # Use Release configuration on CI
-      export_method: "ad-hoc",
-      clean: true,               # Clean build before archiving
-      silent: false,             # Show xcodebuild logs
-      export_options: {
-        signingStyle: "manual",  # Use manual signing
-        provisioningProfiles: {
-          # Map bundle ID of target copy to installed provisioning profile
-          "huynang.Demo.dev" => "demo dev adhoc"
-        },
-        compileBitcode: false    # Disable bitcode to speed up CI build (optional)
-      }
+    # ✅ Pull certificate & provisioning profile via Match
+    match(
+      type: "adhoc",            # ad-hoc, appstore, development
+      readonly: true,           
+      git_url: ENV["MATCH_GIT_URL"],
+      username: ENV["FASTLANE_USER"]
     )
 
-    # -----------------------
-    # Upload to Firebase App Distribution
-    # -----------------------
+    # ✅ Build app
+    build_app(
+      scheme: "MockWorkoutApp copy",
+      export_method: "ad-hoc"
+    )
+
+    # ✅ Upload to Firebase
     firebase_app_distribution(
-      app: ENV["FIREBASE_IOS_APP_ID"],  # Firebase iOS app ID
-      testers: ENV["FIREBASE_TESTERS"], # Testers emails
+      app: ENV["FIREBASE_IOS_APP_ID"],
+      testers: ENV["FIREBASE_TESTERS"],
       release_notes: "CI Development build via GitHub Actions"
     )
   end
+
 end
